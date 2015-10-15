@@ -12,9 +12,9 @@ import javax.ejb.Stateless;
 @Stateless
 public class MyResource {
     
-    /** Method processing HTTP GET requests, producing "text/plain" MIME media
+    /** Method processing HTTP GET requests, producing "application/json" MIME media
      * type.
-     * @return String that will be send back as a response of type "text/plain".
+     * @return JsonHelloAnswer a response of type "application/json".
      */
     @GET 
     @Produces("application/json")
