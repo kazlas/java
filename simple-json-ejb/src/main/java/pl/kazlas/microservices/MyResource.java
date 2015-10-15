@@ -16,7 +16,9 @@ public class MyResource {
      */
     @GET 
     @Produces("application/json")
-    public String getIt() {
-        return "Hi there!";
+    public JsonHelloAnswer getIt() {
+    	
+    	JsonHelloAnswer jsonResonse = new JsonHelloAnswer();
+        return jsonResonse;
     }
 }
