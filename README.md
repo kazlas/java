@@ -1,1 +1,1 @@
-# simple-json-ejb
+#JEE stuff
