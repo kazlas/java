@@ -15,7 +15,7 @@ public class MyResource {
      * @return String that will be send back as a response of type "text/plain".
      */
     @GET 
-    @Produces("text/plain")
+    @Produces("application/json")
     public String getIt() {
         return "Hi there!";
     }
