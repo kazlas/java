@@ -7,6 +7,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class JsonHelloAnswer {
 	
 	@XmlElement
-	private String welcomePhrase = "Hi Json!";
+	private String welcomePhrase;
+	
+	JsonHelloAnswer(){
+	};
+
+	JsonHelloAnswer(String welcomePhrase){
+		this.welcomePhrase = welcomePhrase;
+	}
 	
 }
