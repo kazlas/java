@@ -4,11 +4,13 @@ package pl.kazlas.microservices;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 
 import pl.kazlas.ejb.HelloTeller;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.servlet.http.HttpServletResponse;
 
 /** Example resource class hosted at the URI path "/myresource"
  */
@@ -17,6 +19,7 @@ import javax.ejb.Stateless;
 public class MyResource {
     
 	@EJB HelloTeller HelloTeller;
+	@Context HttpServletResponse response;
 	
     /** Method processing HTTP GET requests, producing "application/json" MIME media
      * type.
@@ -25,6 +28,8 @@ public class MyResource {
     @GET 
     @Produces("application/json")
     public JsonHelloAnswer getIt() {
+    	response.addHeader("Access-Control-Allow-Origin", "*");
+    	response.addHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
     	
     	JsonHelloAnswer jsonResonse = new JsonHelloAnswer("Hello JSON!");
         return jsonResonse;
