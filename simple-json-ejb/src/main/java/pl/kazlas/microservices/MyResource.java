@@ -4,7 +4,6 @@ package pl.kazlas.microservices;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
 
 import pl.kazlas.ejb.HelloTeller;
 
@@ -25,14 +24,10 @@ public class MyResource {
      */
     @GET 
     @Produces("application/json")
-    public Response getIt() {
+    public JsonHelloAnswer getIt() {
 
     	JsonHelloAnswer jsonResonse = new JsonHelloAnswer("Hello JSON!");
-        return Response.ok()
-        		.entity(jsonResonse)
-        		.header("Access-Control-Allow-Origin", "*")
-        		.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-        		.build();
+        return jsonResonse;
     }
     
     @GET
