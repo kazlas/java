@@ -1,5 +1,8 @@
 package pl.kazlas.frankfurter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import javax.ejb.EJB;
@@ -14,6 +17,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import pl.kazlas.frankfurter.entity.RateSearchEntity;
 import pl.kazlas.frankfurter.json.RatesJson;
@@ -35,30 +41,43 @@ public class ExchangeRates {
 	@Path("/eurusd")
 	@GET
 	public Float getEurUsd(@QueryParam("date") String date) {
-		RatesJson ratesJson = getEurUsdFromFrankurter(date);
+		Float rate = getEurUsdFromFrankurter(date);
+		LocalDateTime timestamp = LocalDateTime.now();
+		eventLog.addSearching(
+				new RateSearchEntity(
+						LocalDate.parse(date).atStartOfDay(),
+						rate, 
+						timestamp));
 		
-		Optional<Float> usdRate = Optional.ofNullable(ratesJson)
-        	.map(rates -> ratesJson.getRates())
-        	.map(rate -> rate.getUSD());
-		if (!usdRate.isPresent()) {
-			return (float) 0;
-		}
-		
-		eventLog.addSearching(new RateSearchEntity());
-
-		return usdRate.get();
+		return rate;
 	}
 
+	@Path("/list")
+	@GET
+	public String getAllSearches() throws JsonProcessingException {
+		return new ObjectMapper()
+				.writeValueAsString(
+						eventLog.getAll());
+	}
 	
-	private RatesJson getEurUsdFromFrankurter(String date) {
+	private Float getEurUsdFromFrankurter(String date) {
 		Client client = ClientBuilder.newClient();
 		
-		return client.target(REST_URI)
+		RatesJson ratesJson = client
+				.target(REST_URI)
 				.path(date)
 				.queryParam("from", "EUR")
 				.queryParam("to", "USD")
 				.request(MediaType.APPLICATION_JSON)
 				.get(RatesJson.class);
+		
+		Optional<Float> usdRate = Optional.ofNullable(ratesJson)
+	        	.map(rates -> ratesJson.getRates())
+	        	.map(rate -> rate.getUSD());
+		
+		if (!usdRate.isPresent()) {
+			return (float) 0;
+		}
+		return usdRate.get();
 	}
-
 }
