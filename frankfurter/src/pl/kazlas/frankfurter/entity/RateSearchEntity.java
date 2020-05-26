@@ -1,5 +1,6 @@
 package pl.kazlas.frankfurter.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -23,7 +24,7 @@ public class RateSearchEntity {
 	@JsonSerialize(using = LocalDateTimeSerializer.class)  
 	private LocalDateTime date;
 	
-	private Float rate;
+	private BigDecimal rate;
 
 	@JsonSerialize(using = LocalDateTimeSerializer.class)  
 	private LocalDateTime timestamp;
@@ -31,7 +32,7 @@ public class RateSearchEntity {
 	public RateSearchEntity() {
 	}
 
-	public RateSearchEntity(LocalDateTime date, Float rate, LocalDateTime timestamp) {
+	public RateSearchEntity(LocalDateTime date, BigDecimal rate, LocalDateTime timestamp) {
 		this.date = date;
 		this.rate = rate;
 		this.timestamp = timestamp;
@@ -53,11 +54,11 @@ public class RateSearchEntity {
 		this.date = date;
 	}
 
-	public Float getRate() {
+	public BigDecimal getRate() {
 		return rate;
 	}
 
-	public void setRate(Float rate) {
+	public void setRate(BigDecimal rate) {
 		this.rate = rate;
 	}
 

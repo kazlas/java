@@ -1,8 +1,8 @@
 package pl.kazlas.frankfurter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import javax.ejb.EJB;
@@ -40,8 +40,8 @@ public class ExchangeRates {
 
 	@Path("/eurusd")
 	@GET
-	public Float getEurUsd(@QueryParam("date") String date) {
-		Float rate = getEurUsdFromFrankurter(date);
+	public BigDecimal getEurUsd(@QueryParam("date") String date) {
+		BigDecimal rate = getEurUsdFromFrankurter(date);
 		LocalDateTime timestamp = LocalDateTime.now();
 		eventLog.addSearching(
 				new RateSearchEntity(
@@ -60,7 +60,7 @@ public class ExchangeRates {
 						eventLog.getAll());
 	}
 	
-	private Float getEurUsdFromFrankurter(String date) {
+	private BigDecimal getEurUsdFromFrankurter(String date) {
 		Client client = ClientBuilder.newClient();
 		
 		RatesJson ratesJson = client
@@ -71,12 +71,12 @@ public class ExchangeRates {
 				.request(MediaType.APPLICATION_JSON)
 				.get(RatesJson.class);
 		
-		Optional<Float> usdRate = Optional.ofNullable(ratesJson)
+		Optional<BigDecimal> usdRate = Optional.ofNullable(ratesJson)
 	        	.map(rates -> ratesJson.getRates())
 	        	.map(rate -> rate.getUSD());
 		
 		if (!usdRate.isPresent()) {
-			return (float) 0;
+			return BigDecimal.ZERO;
 		}
 		return usdRate.get();
 	}
